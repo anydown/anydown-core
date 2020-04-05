@@ -247,6 +247,12 @@
         <line x1="10" x2="10" y1="5" y2="15" stroke="ForestGreen" />
         <line x1="5" x2="15" y1="10" y2="10" stroke="ForestGreen" />
       </g>
+
+
+      <g transform="translate(100, 100)" v-if="selectedItem">
+        <circle cx=10 cy=10 r=5 @click="selectedItem.type = 'box'" />
+        <circle cx=30 cy=10 r=5 @click="selectedItem.type = 'arrow'" />
+      </g>
     </svg>
   </div>
 </template>
