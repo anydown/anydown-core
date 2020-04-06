@@ -13,16 +13,27 @@
         <filter id="dropshadow" x="0" y="0" width="200%" height="200%">
           <feOffset result="offOut" in="SourceAlpha" dx="3" dy="3" />
           <feGaussianBlur result="blurOut" in="offOut" stdDeviation="1" />
-          <feComponentTransfer in="blurOut"  result="alphaOut">
+          <feComponentTransfer in="blurOut" result="alphaOut">
             <feFuncA type="linear" slope="0.5" />
           </feComponentTransfer>
           <feBlend in="SourceGraphic" in2="alphaOut" mode="normal" />
         </filter>
       </defs>
       <g v-for="(item, idx) in items" :key="idx" @pointerdown="selectItem(idx)">
-        <g v-if="item.type === 'box'" :transform="`translate(${item.x}, ${item.y})`">
-          <rect filter="url(#dropshadow)" x="0.5" y="0.5" :height="item.height" :width="item.width" />
+        <g
+          v-if="item.type === 'box' || item.type === 'text'"
+          :transform="`translate(${item.x}, ${item.y})`"
+        >
           <rect
+            v-if="item.type === 'box'"
+            filter="url(#dropshadow)"
+            x="0.5"
+            y="0.5"
+            :height="item.height"
+            :width="item.width"
+          />
+          <rect
+            v-if="item.type === 'box'"
             class="item__background"
             fill="white"
             stroke="black"
@@ -99,7 +110,7 @@
 
       <g v-if="selectedItem">
         <g
-          v-if="selectedItem.type === 'box'"
+          v-if="selectedItem.type === 'box' || selectedItem.type === 'text' "
           :transform="`translate(${selectedItem.x}, ${selectedItem.y})`"
         >
           <rect
@@ -248,10 +259,35 @@
         <line x1="5" x2="15" y1="10" y2="10" stroke="ForestGreen" />
       </g>
 
-
-      <g transform="translate(100, 100)" v-if="selectedItem">
-        <circle cx=10 cy=10 r=5 @click="selectedItem.type = 'box'" />
-        <circle cx=30 cy=10 r=5 @click="selectedItem.type = 'arrow'" />
+      <g
+        :transform="typeNavTransform"
+        v-if="selectedItem && (selectedItem.type==='box' || selectedItem.type==='text')"
+      >
+        <g
+          transform="translate(0, 0)"
+          class="typeNav__item"
+          :class="{active: selectedItem.type==='box'}"
+          @click="selectedItem.type = 'box'"
+        >
+          <path fill="#666" d="M0 0h24v24H0z" />
+          <path
+            d="M10.5 8.8c-.4 0-.7.1-1 .4a9 9 0 01-1 .7c-.2 0-.3 0-.3-.3v-.2l.1-1.2.3-.3H14.7c.4 0 .7 0 .7.2.1.1.2.4.2.9v.3c0 .4-.1.7-.3.7-.2 0-.4-.2-.6-.5L14 9c-.2-.2-.5-.2-.8-.2-.2 0-.4.2-.4.5a63.5 63.5 0 000 5.3c0 .2.2.4.5.6.3.2.4.4.4.5 0 .1 0 .2-.2.3H11a5 5 0 01-.8 0c-.1 0-.2-.1-.2-.3l.4-.5.5-.6v-2.7a33.8 33.8 0 00-.1-3l-.4-.1z"
+            fill="currentcolor"
+          />
+          <path stroke="currentcolor" fill="none" d="M2.5 2.5h19v19h-19z" />
+        </g>
+        <g
+          transform="translate(28, 0)"
+          class="typeNav__item"
+          :class="{active: selectedItem.type==='text'}"
+          @click="selectedItem.type = 'text'"
+        >
+          <path fill="#666" d="M0 0h24v24H0z" />
+          <path
+            d="M10.5 8.8c-.4 0-.7.1-1 .4a9 9 0 01-1 .7c-.2 0-.3 0-.3-.3v-.2l.1-1.2.3-.3H14.7c.4 0 .7 0 .7.2.1.1.2.4.2.9v.3c0 .4-.1.7-.3.7-.2 0-.4-.2-.6-.5L14 9c-.2-.2-.5-.2-.8-.2-.2 0-.4.2-.4.5a63.5 63.5 0 000 5.3c0 .2.2.4.5.6.3.2.4.4.4.5 0 .1 0 .2-.2.3H11a5 5 0 01-.8 0c-.1 0-.2-.1-.2-.3l.4-.5.5-.6v-2.7a33.8 33.8 0 00-.1-3l-.4-.1z"
+            fill="currentcolor"
+          />
+        </g>
       </g>
     </svg>
   </div>
@@ -531,10 +567,31 @@ export default {
     selectedItem() {
       return this.items[this.selectedIndex];
     },
+    selectedBBox() {
+      switch (this.selectedItem.type) {
+        case "box":
+        case "text":
+          return {
+            ...this.selectedItem
+          };
+        case "arrow":
+          return {
+            x: this.selectedItem.x1,
+            y: this.selectedItem.y1,
+            width: this.selectedItem.x2 - this.selectedItem.x1,
+            height: this.selectedItem.y2 - this.selectedItem.y1
+          };
+      }
+    },
+    typeNavTransform() {
+      return `translate(${this.selectedBBox.x}, ${this.selectedBBox.y +
+        this.selectedBBox.height +
+        12})`;
+    },
     stringData() {
       return `${this.items
         .map(i => {
-          if (i.type === "box") {
+          if (i.type === "box" || i.type === "text") {
             return [i.text, i.type, i.x, i.y, i.width, i.height].join(",");
           }
           if (i.type === "arrow") {
@@ -620,5 +677,13 @@ svg {
   margin: 0;
   display: flex;
   flex: 1;
+}
+.typeNav__item {
+  color: white;
+  opacity: 0.5;
+}
+.typeNav__item.active {
+  color: #6db9ff;
+  opacity: 1;
 }
 </style>
