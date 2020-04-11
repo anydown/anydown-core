@@ -259,41 +259,18 @@
         <line x1="5" x2="15" y1="10" y2="10" stroke="ForestGreen" />
       </g>
 
-      <g
+      <CodeBlockSelectorBox
         :transform="typeNavTransform"
+        :selected-item="selectedItem"
         v-if="selectedItem && (selectedItem.type==='box' || selectedItem.type==='text')"
       >
-        <g
-          transform="translate(0, 0)"
-          class="typeNav__item"
-          :class="{active: selectedItem.type==='box'}"
-          @click="selectedItem.type = 'box'"
-        >
-          <path fill="#666" d="M0 0h24v24H0z" />
-          <path
-            d="M10.5 8.8c-.4 0-.7.1-1 .4a9 9 0 01-1 .7c-.2 0-.3 0-.3-.3v-.2l.1-1.2.3-.3H14.7c.4 0 .7 0 .7.2.1.1.2.4.2.9v.3c0 .4-.1.7-.3.7-.2 0-.4-.2-.6-.5L14 9c-.2-.2-.5-.2-.8-.2-.2 0-.4.2-.4.5a63.5 63.5 0 000 5.3c0 .2.2.4.5.6.3.2.4.4.4.5 0 .1 0 .2-.2.3H11a5 5 0 01-.8 0c-.1 0-.2-.1-.2-.3l.4-.5.5-.6v-2.7a33.8 33.8 0 00-.1-3l-.4-.1z"
-            fill="currentcolor"
-          />
-          <path stroke="currentcolor" fill="none" d="M2.5 2.5h19v19h-19z" />
-        </g>
-        <g
-          transform="translate(28, 0)"
-          class="typeNav__item"
-          :class="{active: selectedItem.type==='text'}"
-          @click="selectedItem.type = 'text'"
-        >
-          <path fill="#666" d="M0 0h24v24H0z" />
-          <path
-            d="M10.5 8.8c-.4 0-.7.1-1 .4a9 9 0 01-1 .7c-.2 0-.3 0-.3-.3v-.2l.1-1.2.3-.3H14.7c.4 0 .7 0 .7.2.1.1.2.4.2.9v.3c0 .4-.1.7-.3.7-.2 0-.4-.2-.6-.5L14 9c-.2-.2-.5-.2-.8-.2-.2 0-.4.2-.4.5a63.5 63.5 0 000 5.3c0 .2.2.4.5.6.3.2.4.4.4.5 0 .1 0 .2-.2.3H11a5 5 0 01-.8 0c-.1 0-.2-.1-.2-.3l.4-.5.5-.6v-2.7a33.8 33.8 0 00-.1-3l-.4-.1z"
-            fill="currentcolor"
-          />
-        </g>
-      </g>
     </svg>
   </div>
 </template>
 
 <script>
+import CodeBlockSelectorBox from "./CodeBlockSelectorBox"
+
 const handleSize = 10 / 2;
 
 function isHit(box, x, y) {
@@ -635,6 +612,9 @@ export default {
     input(input) {
       this.updateData(input);
     }
+  },
+  components:{
+    CodeBlockSelectorBox
   }
 };
 </script>
@@ -677,13 +657,5 @@ svg {
   margin: 0;
   display: flex;
   flex: 1;
-}
-.typeNav__item {
-  color: white;
-  opacity: 0.5;
-}
-.typeNav__item.active {
-  color: #6db9ff;
-  opacity: 1;
 }
 </style>
