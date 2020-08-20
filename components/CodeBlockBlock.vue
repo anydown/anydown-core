@@ -399,7 +399,8 @@ export default {
               (i) =>
                 i.type === "arrow-start" ||
                 i.type === "arrow-end" ||
-                i.type === "arrow-both"
+                i.type === "arrow-both" ||
+                i.type === "line"
             )
             .filter((i) => {
               return isHit(item, i.x1, i.y1);
@@ -411,7 +412,8 @@ export default {
               (i) =>
                 i.type === "arrow-start" ||
                 i.type === "arrow-end" ||
-                i.type === "arrow-both"
+                i.type === "arrow-both" ||
+                i.type === "line"
             )
             .filter((i) => {
               return isHit(item, i.x2, i.y2);
