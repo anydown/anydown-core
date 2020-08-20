@@ -317,6 +317,15 @@ function round(v) {
   return Math.round(v / 10) * 10;
 }
 
+function isLine(type) {
+  return (
+    type === "arrow-start" ||
+    type === "arrow-end" ||
+    type === "arrow-both" ||
+    type === "line"
+  );
+}
+
 export default {
   props: {
     input: String,
@@ -395,26 +404,14 @@ export default {
 
           //Arrow Start
           const affectedStart = this.items
-            .filter(
-              (i) =>
-                i.type === "arrow-start" ||
-                i.type === "arrow-end" ||
-                i.type === "arrow-both" ||
-                i.type === "line"
-            )
+            .filter((i) => isLine(i.type))
             .filter((i) => {
               return isHit(item, i.x1, i.y1);
             });
           this.moveAffectedLines(affectedStart, nx - item.x, ny - item.y, true);
           //Arrow End
           const affectedEnd = this.items
-            .filter(
-              (i) =>
-                i.type === "arrow-start" ||
-                i.type === "arrow-end" ||
-                i.type === "arrow-both" ||
-                i.type === "line"
-            )
+            .filter((i) => isLine(i.type))
             .filter((i) => {
               return isHit(item, i.x2, i.y2);
             });
@@ -534,12 +531,7 @@ export default {
         .filter((item) => item.length > 0)
         .map((i) => {
           const p = i.split(",");
-          if (
-            p[1] === "arrow-start" ||
-            p[1] === "arrow-end" ||
-            p[1] === "arrow-both" ||
-            p[1] === "line"
-          ) {
+          if (isLine(p[1])) {
             return {
               text: p[0],
               type: p[1],
@@ -681,12 +673,7 @@ export default {
           if (i.type === "box" || i.type === "text") {
             return [i.text, i.type, i.x, i.y, i.width, i.height].join(",");
           }
-          if (
-            i.type === "arrow-start" ||
-            i.type === "arrow-end" ||
-            i.type === "arrow-both" ||
-            i.type === "line"
-          ) {
+          if (isLine(i.type)) {
             return [i.text, i.type, i.x1, i.y1, i.x2, i.y2].join(",");
           }
           return "";
