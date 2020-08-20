@@ -587,17 +587,14 @@ export default {
       set(val) {
         if (val && this.markerEnd) {
           this.selectedItem.type = "arrow-both";
-          return;
-        }
-        if (val && !this.markerEnd) {
+        } else if (val && !this.markerEnd) {
           this.selectedItem.type = "arrow-start";
-          return;
-        }
-        if (!val && this.markerEnd) {
+        } else if (!val && this.markerEnd) {
           this.selectedItem.type = "arrow-end";
-          return;
+        } else {
+          this.selectedItem.type = "line";
         }
-        this.selectedItem.type = "line";
+        this.$emit("change", this.stringData);
       },
     },
     markerEnd: {
@@ -610,17 +607,14 @@ export default {
       set(val) {
         if (val && this.markerStart) {
           this.selectedItem.type = "arrow-both";
-          return;
-        }
-        if (val && !this.markerStart) {
+        } else if (val && !this.markerStart) {
           this.selectedItem.type = "arrow-end";
-          return;
-        }
-        if (!val && this.markerStart) {
+        } else if (!val && this.markerStart) {
           this.selectedItem.type = "arrow-start";
-          return;
+        } else {
+          this.selectedItem.type = "line";
         }
-        this.selectedItem.type = "line";
+        this.$emit("change", this.stringData);
       },
     },
     contentsHeight() {
